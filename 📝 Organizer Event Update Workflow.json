@@ -1,0 +1,226 @@
+{
+  "name": "📝 Organizer Event Update Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Organizer Event Update Form",
+        "formDescription": "Submit event updates and notifications for participants.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Event name "
+            },
+            {
+              "fieldLabel": "Update message"
+            },
+            {
+              "fieldLabel": "Organizer Email",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bea5504f-97ea-4758-8994-6d49a8c0607b",
+      "name": "On form submission",
+      "webhookId": "49adf2e1-3164-4202-93a0-04bdb1e5c8dd"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1yjOsn6qs5SrP6ix2Ykxy_DCHLkH0FOkwlWt66LYv-8I",
+          "mode": "list",
+          "cachedResultName": "Organizer Updates",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yjOsn6qs5SrP6ix2Ykxy_DCHLkH0FOkwlWt66LYv-8I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yjOsn6qs5SrP6ix2Ykxy_DCHLkH0FOkwlWt66LYv-8I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Event Name ": "={{ $json['Event name '] }}",
+            "Update Message ": "={{ $json['Update message'] }}",
+            "Organizer Email": "={{ $json['Organizer Email'] }}",
+            "Update Date": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Event Name ",
+              "displayName": "Event Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Update Message ",
+              "displayName": "Update Message ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Organizer Email",
+              "displayName": "Organizer Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Update Date",
+              "displayName": "Update Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b3a0fa2a-c259-4186-be6d-bb4ccd897bd5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XQtmgh0F4oSsXjyi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json['Organizer Email'] }}",
+        "subject": "={{ $('On form submission').item.json['Event name '] }}",
+        "message": "=<h2>Event Update Received Successfully! ✅</h2>  <p>Hello,</p>  <p>Your event update has been successfully recorded.</p>  <p><strong>Event:</strong> {{ $json['Event Name '] }}</p>  <p><strong>Update:</strong>{{ $json['Update Message '] }}</p>  <p><strong>Update Date:</strong> {{ new Date().toLocaleString() }}</p>  <br>  <p>Event Management Platform</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "c5949293-3246-4a99-8277-ef0daae21bcd",
+      "name": "Send a message",
+      "webhookId": "a90e0e66-8373-4013-8391-aeb3fa65b928",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TOpUQI7SkyoaHE2z",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Event name ": "ai submit",
+          "Update message": "add 1 day event more",
+          "Organizer Email": "princegoy095@gmail.com",
+          "submittedAt": "2026-09-02T12:04:13.065+05:30",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Append row in sheet": [
+      {
+        "json": {
+          "Event Name ": "ai submit",
+          "Update Message ": "add 1 day event more",
+          "Organizer Email": "princegoy095@gmail.com",
+          "Update Date": "2026-09-02T06:34:13.997Z"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Send a message": [
+      {
+        "json": {
+          "id": "1a060d34a18b6b9e",
+          "threadId": "1a060d34a18b6b9e",
+          "labelIds": [
+            "UNREAD",
+            "SENT",
+            "INBOX"
+          ]
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7f6d7d8d-06ec-4c60-ac19-4e6f437bf0e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47b57acaf762345d847a630d2e3b25c2b13837721cdc4596333d050608da9883"
+  },
+  "nodeGroups": [],
+  "id": "XS1OP9PK4IEWhcf3",
+  "tags": []
+}

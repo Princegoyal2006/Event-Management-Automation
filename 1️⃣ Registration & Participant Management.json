@@ -1,0 +1,426 @@
+{
+  "name": "1️⃣ Registration & Participant Management",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "n8nUserAuth",
+        "formTitle": "AI EVENT ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name "
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Phone Number"
+            },
+            {
+              "fieldLabel": "college"
+            },
+            {
+              "fieldLabel": "Event Name:"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c94eb9f6-c53f-4ad8-a4e3-9ede40314fdd",
+      "name": "On form submission",
+      "webhookId": "09baeca1-2deb-4463-b240-0bbf5dbc53a3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "85a15410-cedf-41f0-869c-f8db835d7bfa",
+              "name": "Full Name ",
+              "value": "={{ $json['Full Name '] }}",
+              "type": "string"
+            },
+            {
+              "id": "167cacdb-2003-4001-9f20-aacbecdbdee9",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "2393853e-823b-4591-9733-b325efe53742",
+              "name": "Phone Number",
+              "value": "={{ $json['Phone Number'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ff49d07d-25dc-4c9b-86cf-18511bf838f6",
+              "name": "Event Name:",
+              "value": "={{ $json['Event Name:'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9e90e874-f703-473a-9c77-3b031863ec3a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const timestamp = Date.now();\nconst randomNumber = Math.floor(Math.random() * 10000);\n\nreturn [\n  {\n    json: {\n      ...$json,\n      participantId: `EVT-${timestamp}-${randomNumber}`,\n      registrationDate: new Date().toISOString(),\n      attendance: \"Not Attended\",\n      certificateStatus: \"Not Generated\"\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "cd6d738f-9eb6-470e-bed8-992faa643743",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1CPXrCZpjfBYwupOfgFs0arFoI2sPkV9nZhcG-zE2rc4",
+          "mode": "list",
+          "cachedResultName": "ai event ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CPXrCZpjfBYwupOfgFs0arFoI2sPkV9nZhcG-zE2rc4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CPXrCZpjfBYwupOfgFs0arFoI2sPkV9nZhcG-zE2rc4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Participant ID": "={{ $json.participantId }}",
+            "Name": "={{ $json['Full Name '] }}",
+            "Email": "={{ $json.Email }}",
+            "Phone": "={{ $json['Phone Number'] }}",
+            "Event": "={{ $json['Event Name:'] }}",
+            "Registration Date": "={{ $json.registrationDate }}",
+            "Attendence ": "={{ $json.attendance }}",
+            "Certificate Ststus": "={{ $json.certificateStatus }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Participant ID",
+              "displayName": "Participant ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Event",
+              "displayName": "Event",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Registration Date",
+              "displayName": "Registration Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attendence ",
+              "displayName": "Attendence ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Certificate Ststus",
+              "displayName": "Certificate Ststus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        0
+      ],
+      "id": "ab24de90-d9c8-41ea-a84a-fe4446a53ffd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XQtmgh0F4oSsXjyi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.qrserver.com/v1/create-qr-code/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{ $json['Participant ID'] }}"
+            },
+            {
+              "name": "size",
+              "value": "300x300"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "qrCode"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        0
+      ],
+      "id": "724eff8d-5d22-48b7-b64b-a72fcf2cf6a7",
+      "name": "Generate QR Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Registration Confirmed – Your QR Code",
+        "message": "=<h2>Registration Successful! 🎉</h2>\n\n<p>Hello <strong>{{ $('Code in JavaScript').item.json['Full Name '] }}</strong>,</p>\n\n<p>Your registration has been successfully completed.</p>\n\n<p><strong>Event:</strong> {{ $('Code in JavaScript').item.json['Event Name:'] }}</p>\n\n<p><strong>Participant ID:</strong> {{ $('Code in JavaScript').item.json.participantId }}</p>\n\n<p>Your personal QR code is attached to this email.</p>\n\n<p>Please keep this QR code safe and show it during event check-in.</p>\n\n<br>\n\n<p>Thank you!</p>\n\n<p><strong>Event Management Team</strong></p>",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "=qrCode"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "153bb585-3c1a-4c2f-9b77-1fdec6652286",
+      "name": "Send a message",
+      "webhookId": "9359643b-73ba-47ad-b833-9e2d7ce1a8b6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TOpUQI7SkyoaHE2z",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Full Name ": "jatin",
+          "Email": "princegoyaloffical@gmail.com",
+          "Phone Number": "9310386197",
+          "college": "MDU",
+          "Event Name:": "Ai submit",
+          "submittedAt": "2026-09-02T11:58:21.630+05:30",
+          "formMode": "test",
+          "user": {
+            "id": "eb9bc09a-ae81-4c02-b47c-e846629dd517",
+            "email": "r2434125@gmail.com",
+            "firstName": "raj",
+            "lastName": " "
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Edit Fields": [
+      {
+        "json": {
+          "Full Name ": "jatin",
+          "Email": "princegoyaloffical@gmail.com",
+          "Phone Number": "9310386197",
+          "Event Name:": "Ai submit"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Code in JavaScript": [
+      {
+        "json": {
+          "Full Name ": "jatin",
+          "Email": "princegoyaloffical@gmail.com",
+          "Phone Number": "9310386197",
+          "Event Name:": "Ai submit",
+          "participantId": "EVT-1788330503377-6199",
+          "registrationDate": "2026-09-02T06:28:23.377Z",
+          "attendance": "Not Attended",
+          "certificateStatus": "Not Generated"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Append row in sheet": [
+      {
+        "json": {
+          "Participant ID": "EVT-1788330503377-6199",
+          "Name": "jatin",
+          "Email": "princegoyaloffical@gmail.com",
+          "Phone": "9310386197",
+          "Event": "Ai submit",
+          "Registration Date": "2026-09-02T06:28:23.377Z",
+          "Attendence ": "Not Attended",
+          "Certificate Ststus": "Not Generated"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Generate QR Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate QR Code": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c05b10aa-81b5-4ab7-ad54-96f343992d4c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47b57acaf762345d847a630d2e3b25c2b13837721cdc4596333d050608da9883"
+  },
+  "nodeGroups": [],
+  "id": "QNoJX7GCYdVlRJLA",
+  "tags": []
+}

@@ -1,0 +1,334 @@
+{
+  "name": "Feedback Collection & Event Analytics",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1LcFq1ddvPpjdi4mJ3xGhJN_yuRQPbeiMZQwfhAb4g6c",
+          "mode": "list",
+          "cachedResultName": "Event Feedback Responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LcFq1ddvPpjdi4mJ3xGhJN_yuRQPbeiMZQwfhAb4g6c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1078142521,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LcFq1ddvPpjdi4mJ3xGhJN_yuRQPbeiMZQwfhAb4g6c/edit#gid=1078142521"
+        },
+        "event": "rowUpdate",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b86646f3-14c4-4ad3-930a-879fc6c49df0",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "gLpM2LSjo83HtlQ0",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Analyze this event feedback.\n\nParticipant Name: {{$json[\"Name\"]}}\nParticipant ID: {{$json[\"Participant ID\"]}}\nEvent Name: {{$json[\"Event Name\"]}}\nRating: {{$json[\"Rate the Event\"]}} out of 5\n\nWhat the participant liked:\n{{$json[\"What did you like about the event?\"]}}\n\nWhat can we improve:\n{{$json[\"What can we improve?\"]}}\n\nProvide the following:\n\n1. Overall Sentiment: Positive, Neutral, or Negative\n2. Main Positive Points\n3. Suggested Improvements\n4. A short overall feedback summary\n\nKeep the response clear and concise."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d5c11cac-e999-4409-8ec9-ad0c94940e52",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "TIVrerGKisGRKWIz",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA",
+          "mode": "list",
+          "cachedResultName": "Event Analytics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Participant ID": "={{ $('Google Sheets Trigger').item.json['Participant ID'] }}",
+            "Name": "={{ $('Google Sheets Trigger').item.json.Name }}",
+            "Event Name": "={{ $('Google Sheets Trigger').item.json['Event Name'] }}",
+            "Rating": "={{ $('Google Sheets Trigger').item.json['Rate the Event'] }}",
+            "AI Sentiment": "={{ $json.output[0].content[0].text.match(/Overall Sentiment:\\s*([^\\n]+)/)?.[1] || '' }}",
+            "AI Analysis": "={{ $json.output[0].content[0].text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Participant ID",
+              "displayName": "Participant ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Event Name",
+              "displayName": "Event Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Sentiment",
+              "displayName": "AI Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Analysis",
+              "displayName": "AI Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        0
+      ],
+      "id": "fc8adaf8-7a49-4b0f-843b-b9633a9c73aa",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XQtmgh0F4oSsXjyi",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Google Sheets Trigger": [
+      {
+        "json": {
+          "Timestamp": 46266.97211052083,
+          "Name": "Prince Goyal",
+          "Participant ID": "EVT-1788265184261-9372",
+          "Event Name": "ai hackathon",
+          "Rate the Event": 2,
+          "What did you like about the event?": "",
+          "What can we improve?": ""
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "Timestamp": 46267.50508116898,
+          "Name": "jatin",
+          "Participant ID": "EVT-1788330503377-6199",
+          "Event Name": "ai submit",
+          "Rate the Event": 3,
+          "What did you like about the event?": "",
+          "What can we improve?": ""
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Message a model": [
+      {
+        "json": {
+          "output": [
+            {
+              "id": "msg_03d6471104a2cf1e006a97c427ea5487d197ed3fb4fb1841da",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "1. Overall Sentiment:\n- Negative (rating 2/5). No written comments were provided.\n\n2. Main Positive Points:\n- None recorded — the participant did not list anything they liked.\n\n3. Suggested Improvements:\n- Reach out to the participant to collect specific feedback (short follow-up survey or quick call).  \n- Improve event communication: clearer agenda, timelines, and expectations before and during the hackathon.  \n- Strengthen mentorship and technical support (more mentors, clearer help channels, reliable infrastructure).  \n- Clarify challenge prompts, judging criteria, and prize distribution to reduce confusion.  \n- Improve logistics and attendee experience (venue/virtual platform stability, food, networking opportunities).  \n- Provide better post-event follow-up: project feedback, resources, and next steps for participants.\n\n4. Short overall feedback summary:\nThe participant rated the ai hackathon poorly (2/5) but left no comments. To address this negative sentiment, organizers should solicit specific input from the participant, and consider improvements in communication, mentorship, technical support, event logistics, and post-event follow-up."
+                }
+              ],
+              "role": "assistant"
+            }
+          ]
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "output": [
+            {
+              "id": "msg_022c6bb46df0c5c7006a97c42cbcfc87d18b96dd224e7fff27",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "1. Overall Sentiment: Neutral\n\n2. Main Positive Points:\n- No specific positives were provided by the participant.\n- A mid-level rating (3/5) suggests some aspects of the event were satisfactory but not outstanding.\n\n3. Suggested Improvements:\n- Request specific feedback: follow up with the participant to ask what they liked and disliked.\n- Clarify and communicate the agenda and expected outcomes more clearly.\n- Improve engagement: add interactive elements (Q&A, polls, small group work).\n- Adjust content depth or pacing to better match attendee expectations.\n- Ensure smooth technical setup and provide clear pre-event instructions and materials.\n- Offer post-event resources and a brief survey with targeted questions to capture actionable input.\n\n4. Short overall feedback summary:\nParticipant Jatin gave a neutral rating (3/5) but did not list positives or issues. The score indicates the event met basic expectations but left room for improvement. Follow-up to capture specific comments and implement clearer communication, stronger engagement, and targeted content adjustments will help improve future satisfaction."
+                }
+              ],
+              "role": "assistant"
+            }
+          ]
+        },
+        "pairedItem": {
+          "item": 1
+        }
+      }
+    ],
+    "Append row in sheet": [
+      {
+        "json": {
+          "Participant ID": "EVT-1788265184261-9372",
+          "Name": "Prince Goyal",
+          "Event Name": "ai hackathon",
+          "Rating": 2,
+          "AI Sentiment": "- Negative (rating 2/5). No written comments were provided.",
+          "AI Analysis": "1. Overall Sentiment:\n- Negative (rating 2/5). No written comments were provided.\n\n2. Main Positive Points:\n- None recorded — the participant did not list anything they liked.\n\n3. Suggested Improvements:\n- Reach out to the participant to collect specific feedback (short follow-up survey or quick call).  \n- Improve event communication: clearer agenda, timelines, and expectations before and during the hackathon.  \n- Strengthen mentorship and technical support (more mentors, clearer help channels, reliable infrastructure).  \n- Clarify challenge prompts, judging criteria, and prize distribution to reduce confusion.  \n- Improve logistics and attendee experience (venue/virtual platform stability, food, networking opportunities).  \n- Provide better post-event follow-up: project feedback, resources, and next steps for participants.\n\n4. Short overall feedback summary:\nThe participant rated the ai hackathon poorly (2/5) but left no comments. To address this negative sentiment, organizers should solicit specific input from the participant, and consider improvements in communication, mentorship, technical support, event logistics, and post-event follow-up."
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "Participant ID": "EVT-1788330503377-6199",
+          "Name": "jatin",
+          "Event Name": "ai submit",
+          "Rating": 3,
+          "AI Sentiment": "Neutral",
+          "AI Analysis": "1. Overall Sentiment: Neutral\n\n2. Main Positive Points:\n- No specific positives were provided by the participant.\n- A mid-level rating (3/5) suggests some aspects of the event were satisfactory but not outstanding.\n\n3. Suggested Improvements:\n- Request specific feedback: follow up with the participant to ask what they liked and disliked.\n- Clarify and communicate the agenda and expected outcomes more clearly.\n- Improve engagement: add interactive elements (Q&A, polls, small group work).\n- Adjust content depth or pacing to better match attendee expectations.\n- Ensure smooth technical setup and provide clear pre-event instructions and materials.\n- Offer post-event resources and a brief survey with targeted questions to capture actionable input.\n\n4. Short overall feedback summary:\nParticipant Jatin gave a neutral rating (3/5) but did not list positives or issues. The score indicates the event met basic expectations but left room for improvement. Follow-up to capture specific comments and implement clearer communication, stronger engagement, and targeted content adjustments will help improve future satisfaction."
+        },
+        "pairedItem": {
+          "item": 1
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a1a07371-aa41-4926-906d-a8de49e34e33",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47b57acaf762345d847a630d2e3b25c2b13837721cdc4596333d050608da9883"
+  },
+  "nodeGroups": [],
+  "id": "lpFtu2Tz6vP8wsbQ",
+  "tags": []
+}

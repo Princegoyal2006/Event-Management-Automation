@@ -1,0 +1,313 @@
+{
+  "name": "Event Analytics & Report Generation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "93151ff2-3f03-4817-8d03-5ce285c44bb9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA",
+          "mode": "list",
+          "cachedResultName": "Event Analytics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ff7c8e01-1e4f-4d4b-943d-b476fae6d93c",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XQtmgh0F4oSsXjyi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are an Event Analytics AI.\n\nYou will be given raw participant feedback data. You have two tasks:\n\nTASK 1 — Analyze the feedback and call the \"Append row in sheet\" tool exactly once with these arguments:\n- Participant ID: {{ $json[\"Participant ID\"] }}\n- Name: {{ $json[\"Name\"] }}\n- Event Name: {{ $json[\"Event Name\"] }}\n- Rating: {{ $json[\"Rating\"] }}\n- AI Sentiment: your own one-word sentiment judgment (Positive, Negative, or Neutral) based on the rating and any comments\n- AI Analysis: your own full structured analysis (overall sentiment, positive points, suggested improvements, short summary)\n\nYou must call this tool before continuing to Task 2.\n\nTASK 2 — After calling the tool, write a professional event performance report using your own analysis as the source, with these sections:\n1. Event Name\n2. Overall Participant Satisfaction\n3. Average Rating\n4. Overall Sentiment\n5. Key Positive Insights\n6. Areas for Improvement\n7. Recommended Actions\n8. Final Conclusion\n\nUse clear headings and professional language.\n\n--- Feedback Data ---\nParticipant Name: {{ $json[\"Name\"] }}\nEvent Name: {{ $json[\"Event Name\"] }}\nRating: {{ $json[\"Rating\"] }}/5"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "d2788347-afe2-4b41-87a1-7f93e1cf0324",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "TIVrerGKisGRKWIz",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1A3AmAeg8VyKR6Rm_AKwyGpYFwOMgE-3Z",
+        "title": "=Event Analytics Report - {{ $('Get row(s) in sheet').item.json['Event Name'] }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "59973c52-4ef0-4c6e-ad60-0568db1573d2",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "XmiuTeHuaediRkYI",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Message a model').item.json.output[0].content[0].text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "a168421d-b4d1-4f96-82c7-ef829e3275e6",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "XmiuTeHuaediRkYI",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA",
+          "mode": "list",
+          "cachedResultName": "Event Analytics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E1XW3KKy0VmfLZk64vmSgECkKrc7sb8Zok7T1W_87BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Participant ID": "={{ $('Get row(s) in sheet').item.json['Participant ID'] }}",
+            "Name": "={{ $('Get row(s) in sheet').item.json.Name }}",
+            "Event Name": "={{ $('Get row(s) in sheet').item.json['Event Name'] }}",
+            "Rating": "={{ $('Get row(s) in sheet').item.json.Rating }}",
+            "AI Sentiment": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AI_Sentiment', `The overall sentiment of the participant feedback based on their rating and any comments. Respond with exactly one word: Positive, Negative, or Neutral.`, 'string') }}",
+            "AI Analysis": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AI_Analysis', `A structured analysis of the participant feedback including: overall sentiment, main positive points (or None specified if empty), 3-7 suggested improvements as a numbered list, and a short 1-2 sentence overall summary. Base this on the rating and comments provided.`, 'string') }}"
+          },
+          "matchingColumns": [
+            "Participant ID"
+          ],
+          "schema": [
+            {
+              "id": "Participant ID",
+              "displayName": "Participant ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Event Name",
+              "displayName": "Event Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Sentiment",
+              "displayName": "AI Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Analysis",
+              "displayName": "AI Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        544,
+        208
+      ],
+      "id": "9dad4afb-b31e-43c5-93da-b837d58ca08d",
+      "name": "Update row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XQtmgh0F4oSsXjyi",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4d70f58e-88a7-4721-9110-4ff8b8cadb0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "47b57acaf762345d847a630d2e3b25c2b13837721cdc4596333d050608da9883"
+  },
+  "nodeGroups": [],
+  "id": "phtb3fsl3iHaDfY9",
+  "tags": []
+}
