@@ -120,5 +120,3 @@ The solution demonstrates automation across the event lifecycle while reducing r
 
 
 
-## 15. Author
-**Student Project — Assignment 7: AI Event Management**
